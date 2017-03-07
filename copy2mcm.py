@@ -21,7 +21,7 @@ def print_help(name):
 def read_font(filename):
     data = []
     with open(filename, "r") as ih:
-        lines = [line.rstrip('\n') for line in ih]
+        lines = [line.rstrip('\r\n') for line in ih]
         if lines[0] == "MAX7456":
             char_array = []
             char_lines = 0

@@ -4,21 +4,23 @@ set -o errexit  # exit if any program fails
 set -o pipefail # exit if any program in a pipeline fails, also
 set -x          # debug mode
 
-fonts=( bold default large )
-for font in "${fonts[@]}"; do
-  python png2mcm.py -i images/betaflight.png -o fonts/betaflight/${font}.mcm -x 24 -y 4 -s 160
-  python copy2mcm.py -i fonts/mwosd/${font}.mcm -o fonts/betaflight/${font}.mcm -f 0 -t 0 -c 160
-  # move the symbols we need into a range outside of the logo
-  # throttle
-  python copy2mcm.py -i fonts/mwosd/${font}.mcm -o fonts/betaflight/${font}.mcm -f 0xC8 -t 0x04 -c 2
-  # rssi
-  python copy2mcm.py -i fonts/mwosd/${font}.mcm -o fonts/betaflight/${font}.mcm -f 0xBA -t 0x01 -c 1
-  # volt
-  python copy2mcm.py -i fonts/mwosd/${font}.mcm -o fonts/betaflight/${font}.mcm -f 0xA9 -t 0x06 -c 1
-  # amp
-  python copy2mcm.py -i fonts/mwosd/${font}.mcm -o fonts/betaflight/${font}.mcm -f 0xA4 -t 0x07 -c 1
-  # ahi
-  python copy2mcm.py -i fonts/mwosd/${font}.mcm -o fonts/betaflight/${font}.mcm -f 0xBC -t 0x27 -c 1
-  # copy it into the project
-  cp fonts/betaflight/${font}.mcm ~/src/rc/betaflight-configurator/resources/osd/
+projects=( betaflight cleanflight )
+
+rm -rf build
+
+for project in "${projects[@]}"; do
+  fonts=( bold default large extra_large digital ${project} )
+
+  mkdir -p build/fonts/${project}
+  mkdir -p build/fonts/logos
+  python png2mcm.py -i images/${project}.png -o build/fonts/logos/${project}-logo.mcm -x 24 -y 4 -s 160
+
+
+  for font in "${fonts[@]}"; do
+    cp fonts/${project}/${font}.mcm build/fonts/${project}/${font}.mcm
+    python copy2mcm.py -i build/fonts/logos/${project}-logo.mcm -o build/fonts/${project}/${font}.mcm -f 160 -t 160 -c 96
+
+    mkdir -p dist/${project}-configurator/resources/osd
+    cp build/fonts/${project}/${font}.mcm dist/${project}-configurator/resources/osd/
+  done
 done
