@@ -13,7 +13,7 @@ for project in "${projects[@]}"; do
 
   mkdir -p build/fonts/${project}
   mkdir -p build/fonts/logos
-  python png2mcm.py -i images/${project}.png -o build/fonts/logos/${project}-logo.mcm -x 24 -y 4 -s 160
+  python png2mcm.py -i logos/${project}.png -o build/fonts/logos/${project}-logo.mcm -x 24 -y 4 -s 160
 
 
   for font in "${fonts[@]}"; do
