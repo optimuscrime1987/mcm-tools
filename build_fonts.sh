@@ -9,7 +9,7 @@ projects=( betaflight cleanflight )
 rm -rf build
 
 for project in "${projects[@]}"; do
-  fonts=( bold default large extra_large digital ${project} )
+  fonts=( bold default large extra_large digital clarity ${project} )
 
   mkdir -p build/fonts/${project}
   mkdir -p build/fonts/logos
